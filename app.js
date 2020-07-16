@@ -4,10 +4,7 @@ const fs = require('fs')
 const chalk = require('chalk')
 
 const baseUrl = 'http://insecam.org'
-
-const pageLimit = 10
-let pageCounter = 0
-let resultCount = 0
+const numPages = 3
 
 console.log(chalk.greenBright.bgBlack(`\n Scraping ${chalk.underline.bold(baseUrl)} for camera's`))
 
@@ -19,6 +16,7 @@ const getWebsiteContent = async url => {
     await $('.thumbnail-item__wrap').each(function () {
       cameraEndpoints.push(`${baseUrl}${($(this).attr('href'))}`)
     })
+
     return cameraEndpoints
   } catch (err) {
     console.error(err)
@@ -30,7 +28,10 @@ const getWebsiteContent = async url => {
  */
 const save = (data, output) => {
   !fs.existsSync('./output') && fs.mkdirSync('./output');
-  fs.writeFile(`./output/${output}`, JSON.stringify(data, 0, 4), err => err && console.log(err))
+  fs.appendFile(`./output/${output}`, data + ',', err => err && console.log(err))
 }
 
-getWebsiteContent(`${baseUrl}/en`).then(data => save(data, 'cam_urls.json'))
+/*
+ * Loop through pages & save urls
+ */
+for (let i = 1; i < 3; i++) getWebsiteContent(`${baseUrl}/en/bycountry/US?page=${i}`).then(data => save(data, 'cam_urls.csv'))
