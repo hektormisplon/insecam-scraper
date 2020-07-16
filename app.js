@@ -34,4 +34,4 @@ const save = (data, output) => {
 /*
  * Loop through pages & save urls
  */
-for (let i = 1; i < 3; i++) getWebsiteContent(`${baseUrl}/en/bycountry/US?page=${i}`).then(data => save(data, 'cam_urls.csv'))
+for (let i = 1; i < numPages; i++) getWebsiteContent(`${baseUrl}/en/bycountry/US?page=${i}`).then(data => save(data, 'cam_urls.csv'))
